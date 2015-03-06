@@ -1,0 +1,62 @@
+# This only creates a key and csr for a domain, such as coolness.coolverbs.com or coolverbs.com or *.coolverbs.com etc
+# This was written for open ssl on Debian/ Ubuntu. To install open ssl:
+# apt-get install openssl
+# Then, you need to do other stuff, which a gazillion tutorials can help you with.
+# When you're ready to create the .key and .csr files, this script will be handy.
+
+# Once you have openssl installed, copy the below script to a file called kcscript.
+# vi kcscript
+# !/bin/bash
+ 
+#Required
+domain=$1
+commonname=$domain
+ 
+#Fill-in these details:
+country=US
+state=Denial
+locality="City Name"
+organization="Awesomeorg, Inc"
+organizationalunit="Information Systems Department"
+email=web@myemai.verb.ink
+ 
+#Optional but good details:
+#challengpassword=
+companyname="My Awesomeorg, Inc"
+
+if [ -z "$domain" ]
+then
+    echo "You did not give a domain. Just start over and type it after the script command separated by a space."
+    echo "Useage $0 [common name]"
+ 
+    exit 99
+fi
+ 
+echo "Generating key request for $domain"
+ 
+#For making the key
+openssl genrsa -out $domain.key 2048
+ 
+#For making the csr
+echo "Creating CSR"
+openssl req -new -key $domain.key -out $domain.csr \
+    -subj "/C=$country/ST=$state/L=$locality/O=$organization/OU=$organizationalunit/CN=$commonname/emailAddress=$email/unstructuredName=$companyname/"
+
+# Add this to the above line of arguments if you want to use the challenge password, and uncomment it in the fill-in details above:   
+# challengePassword=$challengepassword
+ 
+echo All wrapped-up, key and csr for $domain be waitin fer ye, capn.
+
+# Be sure to make the script executable:
+# chmod +x kcscript
+
+# Rename kcscript to anything you want, such as vs...
+# You can then call the script with ./kcscript and specify your domain name as an argument. For example:
+# ./kcscript mynewwebserver.jamescoyle.net
+# OR, if renamed
+# ./vs coolio.inkisaverb.com
+
+# That could create both the .key and .csr files, useful if you need to do a lot of them and/or want to avoid typing errors.
+# Special thanks to James Coyle at www.jamescoyle.net/how-to/1073-bash-script-to-create-an-ssl-certificate-key-and-request-csr
+# I had to modify this for it to work for me and wanted to put it back on the web. This Git Repo was they way.
+# Cheers to openness! Fork, pull, enjoy!
