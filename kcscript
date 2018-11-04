@@ -48,7 +48,7 @@ openssl req -new -key $domain.key -out $domain.csr \
 echo All wrapped-up, key and csr for $domain be waitin fer ye, capn.
 
 # Be sure to make the script executable:
-# chmod +x kcscript
+# chmod ug+x kcscript
 
 # Rename kcscript to anything you want, such as vs...
 # You can then call the script with ./kcscript and specify your domain name as an argument. For example:
